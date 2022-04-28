@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+
+  postgres_db:
+    container_name: postgres_db
+    image: library/postgres:13
+    restart: always
+    user: postgres
+    environment:
+      POSTGRES_PASSWORD: 123
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "school_project"
+    ports:
+      - "5445:5432"
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d/
