@@ -1,6 +1,7 @@
 package com.comerlato.school_project.dto;
 
 import com.comerlato.school_project.util.validation.NullableNotBlank;
+import com.comerlato.school_project.util.validation.Phone;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
@@ -25,6 +26,7 @@ public class StudentUpdateRequestDTO {
     @NullableNotBlank
     String lastName;
 
+    @Phone
     @NullableNotBlank
     String phone;
 }

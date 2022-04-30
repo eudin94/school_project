@@ -1,5 +1,6 @@
 package com.comerlato.school_project.dto;
 
+import com.comerlato.school_project.util.validation.Phone;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
@@ -22,6 +23,7 @@ public class StudentCreateRequestDTO {
     @Length(min = 1, max = 255)
     String lastName;
 
+    @Phone
     @NotBlank
     @Length(min = 1, max = 255)
     String phone;
