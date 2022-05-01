@@ -19,7 +19,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @With
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "department")
+@Table(name = "course")
 public class Course {
 
     @Id

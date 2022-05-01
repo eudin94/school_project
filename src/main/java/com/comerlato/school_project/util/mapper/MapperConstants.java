@@ -7,6 +7,7 @@ public class MapperConstants {
     private MapperConstants() {
     }
 
+    public static final CourseMapper courseMapper = Mappers.getMapper(CourseMapper.class);
     public static final InstructorMapper instructorMapper = Mappers.getMapper(InstructorMapper.class);
     public static final StudentMapper studentMapper = Mappers.getMapper(StudentMapper.class);
 

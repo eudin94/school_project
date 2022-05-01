@@ -78,4 +78,20 @@ public class StudentController {
     public void delete(@PathVariable final Integer id) {
         service.delete(id);
     }
+
+    @PutMapping("/{studentId}/enroll/{courseId}")
+    @ResponseStatus(OK)
+    @Operation(summary = "Enroll student in course by id", responses = {@ApiResponse(responseCode = "200")})
+    public StudentDTO enrollStudent(@PathVariable final Integer studentId,
+                                    @PathVariable final Integer courseId) {
+        return service.enrollStudent(studentId, courseId);
+    }
+
+    @PutMapping("/{studentId}/unenroll/{courseId}")
+    @ResponseStatus(OK)
+    @Operation(summary = "Unenroll student from course by id", responses = {@ApiResponse(responseCode = "200")})
+    public StudentDTO unenrollStudent(@PathVariable final Integer studentId,
+                                      @PathVariable final Integer courseId) {
+        return service.unenrollStudent(studentId, courseId);
+    }
 }

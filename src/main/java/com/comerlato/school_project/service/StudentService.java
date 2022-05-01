@@ -3,6 +3,7 @@ package com.comerlato.school_project.service;
 import com.comerlato.school_project.dto.StudentCreateRequestDTO;
 import com.comerlato.school_project.dto.StudentDTO;
 import com.comerlato.school_project.dto.StudentUpdateRequestDTO;
+import com.comerlato.school_project.entity.Course;
 import com.comerlato.school_project.entity.Student;
 import com.comerlato.school_project.repository.StudentRepository;
 import com.comerlato.school_project.repository.specification.StudentSpecification;
@@ -15,15 +16,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static com.comerlato.school_project.exception.ErrorCodeEnum.ERROR_STUDENT_ALREADY_ENROLLED;
 import static com.comerlato.school_project.exception.ErrorCodeEnum.ERROR_STUDENT_DELETION;
+import static com.comerlato.school_project.exception.ErrorCodeEnum.ERROR_STUDENT_NOT_ENROLLED;
 import static com.comerlato.school_project.exception.ErrorCodeEnum.ERROR_STUDENT_NOT_FOUND;
 import static com.comerlato.school_project.util.mapper.MapperConstants.studentMapper;
 import static java.lang.String.format;
 import static java.util.Objects.isNull;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -32,6 +38,7 @@ public class StudentService {
 
     private final StudentRepository repository;
     private final MessageHelper messageHelper;
+    private final CourseService courseService;
 
     public StudentDTO create(final StudentCreateRequestDTO request) {
         final var savedStudent = repository.save(studentMapper.buildStudent(request));
@@ -46,7 +53,13 @@ public class StudentService {
     }
 
     public StudentDTO findDTOById(final Integer id) {
-        return studentMapper.buildStudentDTO(findById(id));
+        final var student = findById(id);
+        return studentMapper.buildStudentDTO(student)
+                .withCourses(
+                        student.getCourses().stream().map(
+                                course -> courseService.findDTOById(course.getId())
+                        ).collect(Collectors.toList())
+                );
     }
 
     public Page<StudentDTO> findAll(final Optional<String> firstName,
@@ -63,12 +76,9 @@ public class StudentService {
     public StudentDTO update(final StudentUpdateRequestDTO request) {
         final var student = findById(request.getId());
         final var updatedStudent = repository.save(student
-                .withFirstName(isNull(request.getFirstName()) ? student.getFirstName()
-                        : request.getFirstName())
-                .withLastName(isNull(request.getLastName()) ? student.getLastName()
-                        : request.getLastName())
-                .withPhone(isNull(request.getPhone()) ? student.getPhone()
-                        : request.getPhone())
+                .withFirstName(isNull(request.getFirstName()) ? student.getFirstName() : request.getFirstName())
+                .withLastName(isNull(request.getLastName()) ? student.getLastName() : request.getLastName())
+                .withPhone(isNull(request.getPhone()) ? student.getPhone() : request.getPhone())
         );
         return findDTOById(updatedStudent.getId());
     }
@@ -81,5 +91,42 @@ public class StudentService {
                     BAD_REQUEST, format(messageHelper.get(ERROR_STUDENT_DELETION, id), throwable.getMessage())
             );
         });
+    }
+
+    public StudentDTO enrollStudent(final Integer studentId, final Integer courseId) {
+        final var student = findById(studentId);
+        final var course = courseService.findById(courseId);
+        final var updatedCourses = addCourseToStudentList(student.getCourses(), course);
+        final var updatedStudent = repository.save(student.withCourses(updatedCourses));
+        return findDTOById(updatedStudent.getId());
+    }
+
+    public StudentDTO unenrollStudent(final Integer studentId, final Integer courseId) {
+        final var student = findById(studentId);
+        final var course = courseService.findById(courseId);
+        final var updatedCourses = removeCourseFromStudentList(student.getCourses(), course);
+        final var updatedStudent = repository.save(student.withCourses(updatedCourses));
+        return findDTOById(updatedStudent.getId());
+    }
+
+    private List<Course> addCourseToStudentList(final List<Course> studentCourses, final Course course) {
+        if (isEmpty(studentCourses)) return List.of(course);
+        if (studentCourses.contains(course)) {
+            final var errorMessage = messageHelper.get(ERROR_STUDENT_ALREADY_ENROLLED, course.getId());
+            log.error(errorMessage);
+            throw new ResponseStatusException(BAD_REQUEST, errorMessage);
+        }
+        studentCourses.add(course);
+        return studentCourses;
+    }
+
+    private List<Course> removeCourseFromStudentList(final List<Course> studentCourses, final Course course) {
+        if (isEmpty(studentCourses) || !studentCourses.contains(course)) {
+            final var errorMessage = messageHelper.get(ERROR_STUDENT_NOT_ENROLLED, course.getId());
+            log.error(errorMessage);
+            throw new ResponseStatusException(BAD_REQUEST, errorMessage);
+        }
+        studentCourses.remove(course);
+        return studentCourses;
     }
 }

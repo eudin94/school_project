@@ -5,6 +5,8 @@ import lombok.Value;
 import lombok.With;
 import lombok.extern.jackson.Jacksonized;
 
+import java.util.List;
+
 @Value
 @With
 @Jacksonized
@@ -15,4 +17,5 @@ public class StudentDTO {
     String firstName;
     String lastName;
     String phone;
+    List<CourseDTO> courses;
 }

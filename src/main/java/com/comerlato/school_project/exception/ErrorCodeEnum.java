@@ -13,7 +13,10 @@ public enum ErrorCodeEnum {
     ERROR_INSTRUCTOR_DELETION("error.instructor.deletion"),
     ERROR_STUDENT_NOT_FOUND("error.student.not.found"),
     ERROR_STUDENT_DELETION("error.student.deletion"),
-    ERROR_DEPARTMENT_NOT_FOUND("error.department.not.found");
+    ERROR_STUDENT_ALREADY_ENROLLED("error.student.already.enrolled"),
+    ERROR_STUDENT_NOT_ENROLLED("error.student.not.enrolled"),
+    ERROR_DEPARTMENT_NOT_FOUND("error.department.not.found"),
+    ERROR_COURSE_NOT_FOUND("error.course.not.found");
 
     private final String messageKey;
 }
