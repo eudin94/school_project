@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.comerlato.school_project.exception.ErrorCodeEnum.ERROR_COURSE_NOT_FOUND;
 import static com.comerlato.school_project.util.mapper.MapperConstants.courseMapper;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -33,5 +36,10 @@ public class CourseService {
         final var course = findById(id);
         return courseMapper.buildCourseDTO(course)
                 .withInstructor(instructorService.findDTOById(course.getInstructorId()));
+    }
+
+    public List<CourseDTO> findByInstructorFirstName(final String instructorFirstName) {
+        final var courses = repository.findAllByInstructorFirstName(instructorFirstName);
+        return courses.stream().map(course -> findDTOById(course.getId())).collect(Collectors.toList());
     }
 }

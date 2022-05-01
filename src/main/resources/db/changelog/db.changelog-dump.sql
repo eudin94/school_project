@@ -16,9 +16,13 @@ VALUES ('Human Sciences', '', 'John', 'Carim', '51999999991'),
 --changeset eduardo.comerlato:3
 INSERT INTO course (department_name, instructor_id, duration, name)
 VALUES ('Human Sciences', '1', '8', 'Social Sciences'),
+       ('Human Sciences', '1', '8', 'Philosophy'),
        ('Languages and Codes', '2', '6', 'System Analysis and Development'),
+       ('Languages and Codes', '2', '8', 'Portuguese'),
        ('Natural Sciences', '3', '10', 'Astrophysics'),
-       ('Math', '4', '8', 'Accounting Sciences');
+       ('Natural Sciences', '3', '10', 'Biology'),
+       ('Math', '4', '8', 'Accounting Sciences'),
+       ('Math', '4', '8', 'Statistics');
 
 --changeset eduardo.comerlato:4
 INSERT INTO student (first_name, last_name, phone)
