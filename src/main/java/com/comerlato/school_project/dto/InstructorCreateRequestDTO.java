@@ -19,7 +19,6 @@ public class InstructorCreateRequestDTO {
     @Length(min = 1, max = 255)
     String departmentName;
 
-    @NotBlank
     @Length(min = 1, max = 255)
     String headedBy;
 

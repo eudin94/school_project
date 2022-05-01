@@ -7,12 +7,15 @@ import lombok.NoArgsConstructor;
 import lombok.With;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Data
@@ -24,6 +27,7 @@ import java.util.List;
 public class Student {
 
     @Id
+    @GeneratedValue(strategy = IDENTITY)
     private Integer id;
     private String firstName;
     private String lastName;
