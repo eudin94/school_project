@@ -7,11 +7,11 @@ VALUES ('Human Sciences', 'Building A, Room 101'),
        ('Math', 'Building B, Room 301');
 
 --changeset eduardo.comerlato:2
-INSERT INTO instructor (department_name, headed_by, first_name, last_name, phone)
-VALUES ('Human Sciences', '', 'John', 'Carim', '51999999991'),
-       ('Languages and Codes', '', 'James', 'Morne', '51999999992'),
-       ('Natural Sciences', '', 'Laura', 'Oolacile', '51999999993'),
-       ('Math', '', 'Anna', 'Lordran', '51999999994');
+INSERT INTO instructor (department_name, first_name, last_name, phone)
+VALUES ('Human Sciences', 'John', 'Carim', '51999999991'),
+       ('Languages and Codes', 'James', 'Morne', '51999999992'),
+       ('Natural Sciences', 'Laura', 'Oolacile', '51999999993'),
+       ('Math', 'Anna', 'Lordran', '51999999994');
 
 --changeset eduardo.comerlato:3
 INSERT INTO course (department_name, instructor_id, duration, name)

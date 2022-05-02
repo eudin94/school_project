@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,8 +38,8 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 public class StudentService {
 
     private final StudentRepository repository;
-    private final MessageHelper messageHelper;
     private final CourseService courseService;
+    private final MessageHelper messageHelper;
 
     public StudentDTO create(final StudentCreateRequestDTO request) {
         final var savedStudent = repository.save(studentMapper.buildStudent(request));
@@ -116,8 +117,9 @@ public class StudentService {
             log.error(errorMessage);
             throw new ResponseStatusException(BAD_REQUEST, errorMessage);
         }
-        studentCourses.add(course);
-        return studentCourses;
+        final var courses = new ArrayList<>(studentCourses);
+        courses.add(course);
+        return courses;
     }
 
     private List<Course> removeCourseFromStudentList(final List<Course> studentCourses, final Course course) {
@@ -126,7 +128,8 @@ public class StudentService {
             log.error(errorMessage);
             throw new ResponseStatusException(BAD_REQUEST, errorMessage);
         }
-        studentCourses.remove(course);
-        return studentCourses;
+        final var courses = new ArrayList<>(studentCourses);
+        courses.remove(course);
+        return courses;
     }
 }
