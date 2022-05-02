@@ -31,6 +31,7 @@ import static com.comerlato.school_project.util.creator.StudentCreator.studentUp
 import static com.comerlato.school_project.util.creator.StudentCreator.updatedStudent;
 import static com.comerlato.school_project.util.creator.StudentCreator.updatedStudentDTO;
 import static com.comerlato.school_project.util.mapper.MapperConstants.studentMapper;
+import static java.lang.String.format;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -116,9 +117,11 @@ public class StudentServiceTest {
 
     @Test
     void delete_throws400_whenDeletionFails() {
+        final var errorMessage = format("Failed to delete student with id ", student.getId().toString(), ".");
+
         when(repository.findById(student.getId())).thenReturn(Optional.of(student));
         when(messageHelper.get(ERROR_STUDENT_DELETION, student.getId()))
-                .thenReturn("Failed to delete student with id ", student.getId().toString(), ".");
+                .thenReturn(errorMessage);
         doThrow(ResponseStatusException.class).when(repository).delete(student);
 
         final var responseStatus = assertThrows(ResponseStatusException.class,
